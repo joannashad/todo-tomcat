@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>To Do List</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="javaScript2.js"></script>
+</head>
+<body>
+    <include src="./header.html"></include>
+    <table width="300px">
+
+        <tr>
+		<td colspan=2>
+                <h1>To Do List</h1>
+                
+            </td>
+        </tr>
+        <tr>
+
+            <td width="300px">
+                <div class="container">
+                    <form action="action_page.php">
+
+                        <label for="fname">Task Name</label><br>
+                        <input type="text" id="taskname" name="taskname" placeholder="Task name..">
+<br>
+                        <label for="lname">Due Date</label><br>
+                        <input type="text" id="duedate" name="duedate" placeholder="When is it due..">
+<br>
+                        <label for="subject">Description</label><br>
+                        <textarea id="desc" name="desc" placeholder="Write a description.." style="height:200px"></textarea>
+<br>
+                        <input type="submit" value="Submit">
+
+                    </form>
+                </div>
+
+            </td>
+	<td width="200px">
+
+	</td>
+        </tr>
+    </table>
+
+    
+</body>
+</html>
