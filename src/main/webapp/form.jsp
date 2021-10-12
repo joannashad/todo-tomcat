@@ -11,10 +11,34 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>To Do List</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="/src/jscript.js">
+    <link rel="stylesheet" href="styles.css">
 
 
 </head>
+<script type="text/javascript">
+function validateDate(date) {
+    var matches = /^(\d{4})[-\/](\d{2})[-\/](\d{2})$/.exec(date);
+    if (matches == null) return false;
+    var d = matches[3];
+    var m = matches[2] - 1;
+    var y = matches[1] ;
+    var composedDate = new Date(y, m, d);
+    return composedDate.getDate() == d &&
+            composedDate.getMonth() == m &&
+            composedDate.getFullYear() == y;
+}
+
+function checkForm(form)
+{
+  if(!validateDate(form.duedate.value)){
+	  alert("Date is not in valid format: yyyy/mm/dd " + form.duedate.value);
+	  return false;
+  }
+  return true;
+}
+
+</script>
 <body>
 <%
 
@@ -25,13 +49,15 @@ if(request.getParameter("id") !=null){
 	td.DeleteToDo();
 }
 if(request.getParameter("taskname") !=null){
-String taskname= request.getParameter("taskname").toString();
-String  duedate= request.getParameter("duedate").toString();
-String desc= request.getParameter("desc").toString();
-if(taskname.length()>0 && duedate.length()>0 && desc.length()>0){
-	ToDo td = new ToDo("0",taskname,desc,duedate);
-	td.addToDo();	
-}
+	String taskname= request.getParameter("taskname").toString();
+	String  duedate= request.getParameter("duedate").toString();
+	String desc="";
+	if(request.getParameter("desc")!=null)
+		desc= request.getParameter("desc").toString();
+
+		ToDo td = new ToDo("0",taskname,desc,duedate);
+		td.addToDo();	
+
 }
 %>
     <table >
@@ -46,13 +72,13 @@ if(taskname.length()>0 && duedate.length()>0 && desc.length()>0){
 
             <td width="50%">
                 <div class="container">
-                    <form method="post" action="form.jsp" name="ToDo">
+                    <form method="post" action="form.jsp" name="ToDo" onsubmit="return checkForm(this);">
 
                         <label for="taskname">Task Name</label><br>
-                        <input type="text" id="taskname" name="taskname" placeholder="Task name here..." >
+                        <input type="text" id="taskname" name="taskname" placeholder="Task name here..." required>
 <br>
                         <label for="duedate">Due Date (yyyy/mm/dd)</label><br>
-                        <input type="text" id="duedate" name="duedate" placeholder="When is it due.." >
+                        <input type="text" id="duedate" name="duedate" placeholder="yyyy/mm/dd" >
 <br>
                         <label for="desc">Description</label><br>
                         <textarea id="desc" name="desc" placeholder="Write a description.." style="height:200px" ></textarea>
