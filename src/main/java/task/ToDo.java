@@ -1,5 +1,6 @@
 package task;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
@@ -70,11 +71,21 @@ public class ToDo {
 			//Date date = new SimpleDateFormat("yyyy-MM-dd")
                //       .format(new Date.parse(dueDate));
 		      MySQLAccess mysql = new MySQLAccess();
-	      String query = "INSERT INTO tasks "
-		        		+ "(task_name,task_desc,due_date) "
-		        		+ " VALUES ('" + name + "','" + description + "', '" + dueDate + "');";
-		                
-		      mysql.exec(query);
+
+		      String query = "call spInsertTask (?,?,?);";
+		      List<String> params = new ArrayList<>();
+		      params.add(name);
+		      params.add(description);
+		      params.add(dueDate);
+		      
+		      mysql.execWithParameters(query,params);          
+
+		      
+	      //String query = "INSERT INTO tasks "
+		      //      		+ "(task_name,task_desc,due_date) "
+		      //	+ " VALUES ('" + name + "','" + description + "', '" + dueDate + "');";
+		        		             
+
 	      }
 	      catch(Exception e) {
 	    	  throw e;
@@ -93,7 +104,8 @@ public class ToDo {
 		  ArrayList<ToDo> myArray = new ArrayList<ToDo>();
 	      try {
 		      MySQLAccess mysql = new MySQLAccess();
-		      String query = "SELECT * from tasks;";
+		      String query =  "call spGetTasks;";		      
+		     // String query = "SELECT * from tasks;";
 		      CachedRowSet resultSet = mysql.execResults(query);
 		     
 		      while(resultSet.next()){                  
@@ -120,9 +132,13 @@ public class ToDo {
 	      try {
 
 				
-		      MySQLAccess mysql = new MySQLAccess();
-	       query = "DELETE FROM  todo.tasks WHERE id = " +  getId() + ";";
-		                
+		      MySQLAccess mysql = new MySQLAccess(); 
+		      query = "call spDeleteTask (?);";
+	       //query = "DELETE FROM  todo.tasks WHERE id = " +  getId() + ";";
+		      List<String> params = new ArrayList<>();
+		      params.add(getId());
+		      
+		      mysql.execWithParameters(query,params);          
 		      mysql.exec(query);
 	      }
 	      catch(Exception e) {
@@ -147,7 +163,7 @@ public class ToDo {
 	 
 	        if (commaIndex == -1)
 	        {
-	            td = new ToDo(string, null,null);
+	            td = new ToDo("",string, null,null);
 	        }
 	        else
 	        {
@@ -155,7 +171,7 @@ public class ToDo {
 	            String Name = string.substring(0, commaIndex);
 	            commaIndex = tdDate.indexOf(" | ");            
 	            String tdDesc = string.substring(commaIndex );
-	            td = new ToDo(Name, tdDate, tdDesc);
+	            td = new ToDo(id,Name, tdDate, tdDesc);
 	        }
 	 
 	        return td;
